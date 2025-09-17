@@ -1,0 +1,24 @@
+package com.example.screentextextractor
+
+import android.content.Context
+import android.graphics.Bitmap
+import android.widget.Toast
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.Text
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+
+object OCRProcessor {
+    fun recognizeText(bitmap: Bitmap, context: Context, onResult: (List<Text.TextBlock>) -> Unit) {
+        val image = InputImage.fromBitmap(bitmap, 0)
+        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+        recognizer.process(image)
+            .addOnSuccessListener { visionText ->
+                onResult(visionText.textBlocks)
+            }
+            .addOnFailureListener { e ->
+                e.printStackTrace()
+                Toast.makeText(context, "OCR识别失败", Toast.LENGTH_SHORT).show()
+            }
+    }
+}
