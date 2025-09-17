@@ -1,0 +1,30 @@
+package com.example.screentextextractor
+
+import android.app.Activity
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.media.projection.MediaProjection
+import android.media.projection.MediaProjectionManager
+import android.widget.Toast
+
+object ScreenCapture {
+    private lateinit var mediaProjectionManager: MediaProjectionManager
+    private const val REQUEST_CODE = 100
+
+    fun startCapture(context: Context) {
+        mediaProjectionManager = context.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        if (context is Activity) {
+            val intent = mediaProjectionManager.createScreenCaptureIntent()
+            context.startActivityForResult(intent, REQUEST_CODE)
+        } else {
+            Toast.makeText(context, "请从 Activity 调用捕捉屏幕", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun captureBitmap(mediaProjection: MediaProjection, callback: (Bitmap) -> Unit) {
+        // 这里可以创建 VirtualDisplay 并抓屏得到 bitmap
+        // 简化：假设 callback 返回 bitmap
+    }
+}
